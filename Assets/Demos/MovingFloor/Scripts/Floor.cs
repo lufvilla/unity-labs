@@ -1,27 +1,53 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
 
-public class Floor : MonoBehaviour
+namespace Demos.MovingFloor
 {
-    public FloorConfig Config;
-    public GameObject Child;
-    public Gradient Gradient;
-
-    private GameObject _target;
-    private Vector3 _initialPosition;
-    private float _currentValue;
-
-    private void Awake()
+    public class Floor : MonoBehaviour
     {
-        _target = GameObject.FindGameObjectWithTag(Config.TargetTag);
-        _initialPosition = Child.transform.localPosition;
-    }
-
-    private void Update()
-    {
-        var distance = Vector3.Distance(transform.position, _target.transform.position) - Config.MinDistance;
-
-        _currentValue = Mathf.Clamp(distance / (Config.MaxDistance - Config.MinDistance), 0, 1) * (Config.Invert ? -1 : 1);
+        public FloorConfig Config;
         
-        Child.transform.localPosition = _initialPosition + Config.Direction * _currentValue;
+        [HideInInspector]
+        public List<Transform> Targets;
+        
+        public event Action OnFloorActivate = delegate { };
+        public event Action OnFloorDeactivate = delegate { };
+        public event Action OnLateUpdate = delegate { };
+
+        private bool _isActive = false;
+
+        private void LateUpdate()
+        {
+            OnLateUpdate.Invoke();
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (!Targets.Contains(other.transform))
+            {
+                Targets.Add(other.transform);
+
+                if (!_isActive)
+                {
+                    _isActive = true;
+                    OnFloorActivate.Invoke();
+                }
+            }
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            if (Targets.Contains(other.transform))
+            {
+                Targets.Remove(other.transform);
+
+                if (Targets.Count <= 0)
+                {
+                    _isActive = false;
+                    OnFloorDeactivate.Invoke();
+                }
+            }
+        }
     }
 }

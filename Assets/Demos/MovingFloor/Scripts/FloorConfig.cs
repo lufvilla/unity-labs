@@ -1,17 +1,24 @@
-﻿using UnityEngine;
+﻿using Framework.RangedFloat;
+using UnityEngine;
 
-[CreateAssetMenu(menuName = "Akane/Environment/Floor")]
-public class FloorConfig : ScriptableObject
+namespace Demos.MovingFloor
 {
-    [Header("Target")]
-    public string TargetTag = "Player";
+    [CreateAssetMenu(menuName = "Demos/Moving Floor/Floor Config")]
+    public class FloorConfig : ScriptableObject
+    {
+        [Header("Target")]
+        public string TargetTag = "Player";
 
-    [Header("Invert")]
-    public bool Invert = true;
+        [Header("Distance")]
+        [MinMaxRange(0, 50)]
+        public RangedFloat Distance = new RangedFloat {MinValue = 2, MaxValue = 15};
 
-    [Header("Distance")]
-    public float MaxDistance = 2;
-    public float MinDistance = 1;
+        [Header("Direction")]
+        public Vector3 Direction = Vector3.up;
+        [Range(-1, 1)]
+        public int Multiplier = 1;
 
-    public Vector3 Direction = Vector3.up;
+        [Header("Color")]
+        public Gradient Color;
+    }
 }
