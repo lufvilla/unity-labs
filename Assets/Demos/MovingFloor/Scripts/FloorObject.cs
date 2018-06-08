@@ -54,7 +54,7 @@ namespace Demos.MovingFloor
 			
 			var distance = Vector3.Distance(transform.position, target.position) - _floorParent.Config.Distance.MinValue;
 			var currentValue = Mathf.Clamp(distance / (_floorParent.Config.Distance.MaxValue - _floorParent.Config.Distance.MinValue), 0, 1);
-			Child.transform.localPosition = _initialPosition + _floorParent.Config.Direction * currentValue * _floorParent.Config.Multiplier;
+			Child.transform.localPosition = _initialPosition + _floorParent.Config.Direction * _floorParent.Config.Curve.Evaluate(currentValue) * _floorParent.Config.Multiplier;
             
 			// Color
 			_childMaterial.SetColor("_EmissionColor", _floorParent.Config.Color.Evaluate(currentValue));

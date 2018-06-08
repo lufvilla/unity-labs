@@ -6,9 +6,6 @@ namespace Demos.MovingFloor
     [CreateAssetMenu(menuName = "Demos/Moving Floor/Floor Config")]
     public class FloorConfig : ScriptableObject
     {
-        [Header("Target")]
-        public string TargetTag = "Player";
-
         [Header("Distance")]
         [MinMaxRange(0, 50)]
         public RangedFloat Distance = new RangedFloat {MinValue = 2, MaxValue = 15};
@@ -20,5 +17,6 @@ namespace Demos.MovingFloor
 
         [Header("Color")]
         public Gradient Color;
+        public AnimationCurve Curve;
     }
 }
