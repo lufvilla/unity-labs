@@ -29,8 +29,7 @@ namespace Demos.MovingFloor
 
 		private void Reset()
 		{
-			_childMaterial.SetColor("_EmissionColor", _floorParent.Config.Color.Evaluate(1));
-			Child.transform.localPosition = _initialPosition + _floorParent.Config.Direction;
+			SetValuesByValue(1);
 		}
 
 		private void OnActivate()
@@ -54,10 +53,14 @@ namespace Demos.MovingFloor
 			
 			var distance = Vector3.Distance(transform.position, target.position) - _floorParent.Config.Distance.MinValue;
 			var currentValue = Mathf.Clamp(distance / (_floorParent.Config.Distance.MaxValue - _floorParent.Config.Distance.MinValue), 0, 1);
-			Child.transform.localPosition = _initialPosition + _floorParent.Config.Direction * _floorParent.Config.Curve.Evaluate(currentValue) * _floorParent.Config.Multiplier;
-            
-			// Color
-			_childMaterial.SetColor("_EmissionColor", _floorParent.Config.Color.Evaluate(currentValue));
+
+			SetValuesByValue(currentValue);
+		}
+
+		private void SetValuesByValue(float value)
+		{
+			Child.transform.localPosition = _initialPosition + _floorParent.Config.Direction * _floorParent.Config.Curve.Evaluate(value) * _floorParent.Config.Multiplier;
+			_childMaterial.SetColor("_EmissionColor", _floorParent.Config.Color.Evaluate(value));
 		}
 
 		private void OnDestroy()
