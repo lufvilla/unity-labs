@@ -1,0 +1,16 @@
+{
+    "name": "Labs.MovingFloor",
+    "rootNamespace": "",
+    "references": [
+        "Labs.Framework"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

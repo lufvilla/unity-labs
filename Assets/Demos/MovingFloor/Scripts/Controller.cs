@@ -5,25 +5,17 @@ using UnityEngine;
 public class Controller : MonoBehaviour
 {
     public float Speed = 5f;
+
+    private float _horizontal;
+    private float _vertical;
         
     private void Update()
     {
-        if (Input.GetKey(KeyCode.W))
-        {
-            transform.position += Vector3.forward * -Speed * Time.deltaTime;
-        }
-        else if (Input.GetKey(KeyCode.S))
-        {
-            transform.position += Vector3.forward * Speed * Time.deltaTime;
-        }
+        _horizontal = Input.GetAxis("Horizontal");
+        _vertical = Input.GetAxis("Vertical");
         
-        if (Input.GetKey(KeyCode.D))
-        {
-            transform.position += Vector3.right * -Speed * Time.deltaTime;
-        }
-        else if (Input.GetKey(KeyCode.A))
-        {
-            transform.position += Vector3.right * Speed * Time.deltaTime;
-        }
+        if(_horizontal == 0 && _vertical == 0) return;
+        
+        transform.position += new Vector3(_horizontal, 0, _vertical).normalized * Speed * Time.deltaTime;
     }
 }

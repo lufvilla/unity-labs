@@ -17,6 +17,6 @@ namespace Demos.MovingFloor
 
         [Header("Color")]
         public Gradient Color;
-        public AnimationCurve Curve;
+        public AnimationCurve Curve = AnimationCurve.Constant(0f, 1f, 1);
     }
 }
