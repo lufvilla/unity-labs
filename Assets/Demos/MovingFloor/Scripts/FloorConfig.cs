@@ -8,7 +8,7 @@ namespace Demos.MovingFloor
     {
         [Header("Distance")]
         [MinMaxRange(0, 50)]
-        public RangedFloat Distance = new RangedFloat {MinValue = 2, MaxValue = 15};
+        public RangedFloat Distance = new() {MinValue = 2, MaxValue = 15};
 
         [Header("Direction")]
         public Vector3 Direction = Vector3.up;

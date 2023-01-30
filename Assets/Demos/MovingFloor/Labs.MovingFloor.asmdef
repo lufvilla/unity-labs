@@ -2,7 +2,8 @@
     "name": "Labs.MovingFloor",
     "rootNamespace": "",
     "references": [
-        "Labs.Framework"
+        "Labs.Framework",
+        "Lambda.Grid.Runtime"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace Demos.MovingFloor
@@ -7,49 +6,43 @@ namespace Demos.MovingFloor
     public class Floor : MonoBehaviour
     {
         public FloorConfig Config;
-        
-        public bool UseComputeShader;
-        public float scale;
-        
-        [HideInInspector]
-        public List<Transform> Targets;
-        [HideInInspector]
-        public FloorObject[] Floors;
 
-        private void Start()
+        protected readonly List<Transform> Targets = new();
+        protected FloorObject[] Floors;
+
+        protected virtual void Start()
         {
             Floors = GetComponentsInChildren<FloorObject>();
+
+            foreach (var floor in Floors)
+                floor.SetFloorManager(this);
         }
         
         private void LateUpdate()
         {
-            if (UseComputeShader) return;
-            
-            //UpdateFloorFromTexture();
             UpdateFloor();
         }
-
-
-        private void UpdateFloorFromTexture()
-        {
-            for (var i = Floors.Length - 1; i >= 0; i--)
-            {
-                float x = Floors[i].transform.position.x * scale;
-                float y = Floors[i].transform.position.z * scale;
-                
-                Floors[i].SetValue(Mathf.PerlinNoise(x, y));
-            }
-        }
-
+        
         private Transform _tmpTarget;
-        private void UpdateFloor()
+        private float _previousDistance;
+        protected virtual void UpdateFloor()
         {
+            float configNormalizedValue = Config.Distance.MaxValue - Config.Distance.MinValue;
+
             for (var i = Floors.Length - 1; i >= 0; i--)
             {
-                _tmpTarget = Targets
-                    .Where(t => Vector3.Distance(Floors[i].transform.position, t.transform.position) < Config.Distance.MaxValue)
-                    .OrderBy(t => Vector3.Distance(Floors[i].transform.position, t.transform.position))
-                    .FirstOrDefault();
+                _tmpTarget = null;
+                _previousDistance = 9999f; // Reset distance
+                
+                foreach (var target in Targets)
+                {
+                    float distance = Vector3.Distance(Floors[i].transform.position, target.position);
+                    
+                    if(distance > Config.Distance.MaxValue || distance >= _previousDistance) continue;
+
+                    _tmpTarget = target;
+                    _previousDistance = distance;
+                }
 
                 if (_tmpTarget == null)
                 {
@@ -57,8 +50,7 @@ namespace Demos.MovingFloor
                     continue;
                 }
 			
-                var distance = Vector3.Distance(Floors[i].transform.position, _tmpTarget.transform.position) - Config.Distance.MinValue;
-                var currentValue = Mathf.Clamp(distance / (Config.Distance.MaxValue - Config.Distance.MinValue), 0, 1);
+                var currentValue = Mathf.Clamp((_previousDistance - Config.Distance.MinValue) / configNormalizedValue, 0, 1);
                 Floors[i].SetValue(currentValue);
             }
         }
@@ -82,9 +74,9 @@ namespace Demos.MovingFloor
             foreach (var target in Targets)
             {
                 Gizmos.color = Color.blue;
-                Gizmos.DrawWireSphere(target.transform.position, Config.Distance.MinValue);
+                Gizmos.DrawWireSphere(target.position, Config.Distance.MinValue);
                 Gizmos.color = Color.red;
-                Gizmos.DrawWireSphere(target.transform.position, Config.Distance.MaxValue);
+                Gizmos.DrawWireSphere(target.position, Config.Distance.MaxValue);
             }
         }
     }

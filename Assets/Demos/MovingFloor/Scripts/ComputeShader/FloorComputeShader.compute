@@ -1,0 +1,44 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSMain
+
+struct Floor
+{
+    float3 position;
+    float value;
+};
+
+struct Target
+{
+    float3 position;
+};
+
+RWStructuredBuffer<Floor> Floors;
+RWStructuredBuffer<Target> Targets;
+
+float normalizedValue;
+float minValue;
+float maxValue;
+
+// https://forum.unity.com/threads/access-animation-curves-from-shader.397927/
+// https://www.redblobgames.com/grids/circle-drawing/
+[numthreads(1024, 1, 1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+    Floor floor = Floors[id.x];
+    float previousDistance = 9999;
+    
+    for (int i = 0; i < Targets.Length; i++) {
+        const Target target = Targets[i];
+        const float dist = distance(floor.position, target.position);
+        if(dist > maxValue || dist >= previousDistance) continue;
+
+        previousDistance = dist;
+    }
+
+    if(previousDistance >= 9999)
+        floor.value = 1;
+    else
+        floor.value = clamp((previousDistance - minValue) / normalizedValue, 0, 1);
+    
+    Floors[id.x] = floor;
+}
