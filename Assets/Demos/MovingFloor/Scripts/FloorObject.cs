@@ -4,7 +4,7 @@ namespace Demos.MovingFloor
 {
 	public class FloorObject : MonoBehaviour
 	{
-		public Renderer ChildRenderer;
+		public Transform Child;
 		
 		private Vector3 _initialPosition;
 		private Material _childMaterial;
@@ -12,8 +12,7 @@ namespace Demos.MovingFloor
 
 		private void Awake()
 		{
-			_initialPosition = ChildRenderer.transform.localPosition;
-			_childMaterial = ChildRenderer.material;
+			_initialPosition = Child.transform.localPosition;
 		}
 
 		public void SetFloorManager(Floor floor)
@@ -25,8 +24,7 @@ namespace Demos.MovingFloor
 		public void SetValue(float value)
 		{
 			// The value it's the one that should be lerped
-			ChildRenderer.transform.localPosition = _initialPosition + _floor.Config.Direction * _floor.Config.Curve.Evaluate(value) * _floor.Config.Multiplier;
-			_childMaterial.SetColor("_EmissionColor", _floor.Config.Color.Evaluate(value));
-		}
+            Child.transform.localPosition = _initialPosition + _floor.Config.Direction * (_floor.Config.Multiplier * _floor.Config.Curve.Evaluate(value));
+        }
 	}
 }

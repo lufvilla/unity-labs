@@ -27,7 +27,7 @@ void CSMain (uint3 id : SV_DispatchThreadID)
     Floor floor = Floors[id.x];
     float previousDistance = 9999;
     
-    for (int i = 0; i < Targets.Length; i++) {
+    for (uint i = 0; i < Targets.Length; i++) {
         const Target target = Targets[i];
         const float dist = distance(floor.position, target.position);
         if(dist > maxValue || dist >= previousDistance) continue;

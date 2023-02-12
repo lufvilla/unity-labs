@@ -29,7 +29,7 @@ public class FloorComputeShaderRunner : Floor
     {
         base.Start();
         
-        _floorsData = Floors.Select(x => new FloorData {Position = x.ChildRenderer.transform.position}).ToArray();
+        _floorsData = Floors.Select(x => new FloorData {Position = x.Child.transform.position}).ToArray();
     }
 
     protected override void UpdateFloor()
@@ -61,13 +61,5 @@ public class FloorComputeShaderRunner : Floor
             
         _floorsBuffer?.Dispose();
         _targetsBuffer?.Dispose();
-    }
-
-    private void OnGUI()
-    {
-        if (GUI.Button(new Rect(0,0,150, 50), "RUN"))
-        {
-            UpdateFloor();
-        }
     }
 }

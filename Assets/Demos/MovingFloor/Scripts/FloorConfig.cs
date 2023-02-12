@@ -14,9 +14,7 @@ namespace Demos.MovingFloor
         public Vector3 Direction = Vector3.up;
         [Range(-1, 1)]
         public int Multiplier = 1;
-
-        [Header("Color")]
-        public Gradient Color;
+        
         public AnimationCurve Curve = AnimationCurve.Constant(0f, 1f, 1);
     }
 }
